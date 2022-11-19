@@ -1,0 +1,82 @@
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(5,6,8,9,10,11);
+  
+int MOTOR = 2;
+int SPRINKLER = 3;
+int SPRAYER = 4;
+int sensor = A0;
+int sensorThresh = 250;
+int camera = 5
+
+void setup()
+{
+pinMode(MOTOR, OUTPUT);
+pinMode(SPRINKLER,OUTPUT);
+pinMode(SPRAYER,OUTPUT);
+pinMode(sensor,INPUT);
+Serial.begin(9600);
+lcd.begin(16,2);
+}
+
+void loop()
+{
+  int analogValue = analogRead(sensor);
+  Serial.print(analogValue);
+  if(analogValue>sensorThresh && camera == 1)
+  {
+    digitalWrite(MOTOR,HIGH);
+    digitalWrite(SPRINKLER,HIGH);
+    digitalWrite(SPRAYER,HIGH);
+    lcd.clear();
+    lcd.setCursor(0,1);
+    lcd.print("ALERT");
+    delay(1000);
+    lcd.clear();
+    lcd.setCursor(0,1);
+    lcd.print("IRRIGATING AND SPRAYING");
+    delay(1000);
+  }
+  else if(analogValue>sensorThresh && camera == 0)
+  {
+    digitalWrite(MOTOR,HIGH);
+    digitalWrite(SPRINKLER,HIGH);
+    digitalWrite(SPRAYER,LOW);
+    lcd.clear();
+    lcd.setCursor(0,1);
+    lcd.print("ALERT");
+    delay(1000);
+    lcd.clear();
+    lcd.setCursor(0,1);
+    lcd.print("IRRIGATING");
+    delay(1000);
+  }  
+else if(analogValue<sensorThresh && camera == 1)
+  {
+    digitalWrite(MOTOR,LOW);
+    digitalWrite(SPRINKLER,LOW);
+    digitalWrite(SPRAYER,HIGH);
+    lcd.clear();
+    lcd.setCursor(0,1);
+    lcd.print("ALERT");
+    delay(1000);
+    lcd.clear();
+    lcd.setCursor(0,1);
+    lcd.print("SPRAYING");
+    delay(1000);
+  } 
+else 
+  {
+    digitalWrite(MOTOR,LOW);
+    digitalWrite(SPRINKLER,LOW);
+    digitalWrite(SPRAYER,LOW);
+    lcd.clear();
+    lcd.setCursor(0,1);
+    lcd.print("NORMAL");
+    delay(1000);
+    lcd.clear();
+    lcd.setCursor(0,1);
+    lcd.print("NORMAL");
+    delay(1000);
+  }   
+     
+}
